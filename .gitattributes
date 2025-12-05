@@ -1,25 +1,10 @@
 * text=auto
 
-# Vendor directories should be excluded from stats
-vendor/* linguist-vendored
-node_modules/* linguist-vendored
+*.blade.php diff=html
+*.css diff=css
+*.html diff=html
+*.md diff=markdown
+*.php diff=php
 
-# Generated/compiled assets should be excluded
-public/css/* linguist-generated
-public/js/* linguist-generated
-public/mix-manifest.json linguist-generated
-
-# JavaScript/React files should be counted
-*.js linguist-language=JavaScript
-*.jsx linguist-language=JavaScript
-resources/js/** linguist-language=JavaScript
-
-# SCSS should be counted
-*.scss linguist-language=SCSS
-
-# Blade templates
-*.blade.php linguist-language=Blade
-
-# Documentation
-*.md linguist-documentation
+/.github export-ignore
 CHANGELOG.md export-ignore
