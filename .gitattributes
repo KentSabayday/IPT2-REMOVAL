@@ -5,6 +5,7 @@
 *.html diff=html
 *.md diff=markdown
 *.php diff=php
-
+# SCSS should be counted
+*.scss linguist-language=SCSS
 /.github export-ignore
 CHANGELOG.md export-ignore
