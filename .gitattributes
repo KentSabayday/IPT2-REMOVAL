@@ -1,59 +1,25 @@
-# Auto detect text files and perform LF normalization
 * text=auto
 
-# PHP Backend
-*.php text diff=php linguist-detectable
+# Vendor directories should be excluded from stats
+vendor/* linguist-vendored
+node_modules/* linguist-vendored
 
-# React Frontend - JavaScript
-*.js text linguist-detectable
-*.jsx text linguist-detectable
-*.ts text linguist-detectable
-*.tsx text linguist-detectable
+# Generated/compiled assets should be excluded
+public/css/* linguist-generated
+public/js/* linguist-generated
+public/mix-manifest.json linguist-generated
 
-# Stylesheets - SCSS/CSS
-*.scss text linguist-detectable
-*.sass text linguist-detectable
-*.css text linguist-detectable
+# JavaScript/React files should be counted
+*.js linguist-language=JavaScript
+*.jsx linguist-language=JavaScript
+resources/js/** linguist-language=JavaScript
 
-# HTML/Blade Templates
-*.html text diff=html
-*.blade.php text diff=html
+# SCSS should be counted
+*.scss linguist-language=SCSS
 
-# JSON & Config Files
-*.json text
-*.lock text -diff
-*.xml text
-*.yaml text
-*.yml text
+# Blade templates
+*.blade.php linguist-language=Blade
 
-# Markdown
-*.md text diff=markdown
-
-# Shell Scripts
-*.sh text eol=lf
-*.bat text eol=crlf
-
-# Git Config
-.gitattributes text
-.gitignore text
-
-# Exclude vendor & node_modules from language stats
-/vendor/** linguist-vendored
-/node_modules/** linguist-vendored
-
-# Exclude compiled/generated files from language stats
-/public/js/** linguist-generated
-/public/css/** linguist-generated
-/public/mix-manifest.json linguist-generated
-
-# Binary files
-*.png binary
-*.jpg binary
-*.jpeg binary
-*.gif binary
-*.ico binary
-*.svg text
-*.woff binary
-*.woff2 binary
-*.ttf binary
-*.eot binary
+# Documentation
+*.md linguist-documentation
+CHANGELOG.md export-ignore
