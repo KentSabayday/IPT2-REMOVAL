@@ -1,0 +1,59 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# PHP Backend
+*.php text diff=php linguist-detectable
+
+# React Frontend - JavaScript
+*.js text linguist-detectable
+*.jsx text linguist-detectable
+*.ts text linguist-detectable
+*.tsx text linguist-detectable
+
+# Stylesheets - SCSS/CSS
+*.scss text linguist-detectable
+*.sass text linguist-detectable
+*.css text linguist-detectable
+
+# HTML/Blade Templates
+*.html text diff=html
+*.blade.php text diff=html
+
+# JSON & Config Files
+*.json text
+*.lock text -diff
+*.xml text
+*.yaml text
+*.yml text
+
+# Markdown
+*.md text diff=markdown
+
+# Shell Scripts
+*.sh text eol=lf
+*.bat text eol=crlf
+
+# Git Config
+.gitattributes text
+.gitignore text
+
+# Exclude vendor & node_modules from language stats
+/vendor/** linguist-vendored
+/node_modules/** linguist-vendored
+
+# Exclude compiled/generated files from language stats
+/public/js/** linguist-generated
+/public/css/** linguist-generated
+/public/mix-manifest.json linguist-generated
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
