@@ -14,6 +14,8 @@ function ProductInventoryApp() {
     const [error, setError] = useState('');
     const [editingProduct, setEditingProduct] = useState(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, product: null });
+    const [deleting, setDeleting] = useState(false);
 
     const loadProducts = async () => {
         setLoading(true);
@@ -76,22 +78,28 @@ function ProductInventoryApp() {
         }
     };
 
-    const handleDelete = async (product) => {
-        if (
-            !confirm(
-                `Are you sure you want to delete "${product.name}"?\n\nThis action cannot be undone.`
-            )
-        ) {
-            return;
-        }
+    const handleDeleteClick = (product) => {
+        setDeleteConfirm({ isOpen: true, product });
+    };
 
+    const handleDeleteCancel = () => {
+        setDeleteConfirm({ isOpen: false, product: null });
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!deleteConfirm.product) return;
+        
+        setDeleting(true);
         try {
-            await fetch(`${API_BASE_URL}/${product.id}`, {
+            await fetch(`${API_BASE_URL}/${deleteConfirm.product.id}`, {
                 method: 'DELETE',
             });
             await loadProducts();
+            setDeleteConfirm({ isOpen: false, product: null });
         } catch (err) {
             setError('Failed to delete product. Please try again.');
+        } finally {
+            setDeleting(false);
         }
     };
 
@@ -171,9 +179,9 @@ function ProductInventoryApp() {
                 ? Number(value)
                 : 0;
 
-        return new Intl.NumberFormat('en-US', {
+        return new Intl.NumberFormat('en-PH', {
             style: 'currency',
-            currency: 'USD',
+            currency: 'PHP',
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         }).format(number);
@@ -298,15 +306,15 @@ function ProductInventoryApp() {
             <div className="inventory-content-card">
                 {loading && <div className="inventory-loading">Loading...</div>}
 
-                {!loading && !isFormOpen && hasProducts && (
+                {!loading && hasProducts && (
                     <ProductList
                         products={filteredProducts}
                         onEdit={handleEditClick}
-                        onDelete={handleDelete}
+                        onDelete={handleDeleteClick}
                     />
                 )}
 
-                {!loading && !isFormOpen && !hasProducts && (
+                {!loading && !hasProducts && (
                     <div className="inventory-empty">
                         <p>No products found</p>
                         <button
@@ -317,16 +325,53 @@ function ProductInventoryApp() {
                         </button>
                     </div>
                 )}
-
-                {isFormOpen && (
-                    <ProductForm
-                        initialProduct={editingProduct}
-                        onSave={handleSave}
-                        onCancel={handleCloseForm}
-                        saving={saving}
-                    />
-                )}
             </div>
+
+            {isFormOpen && (
+                <div className="modal-overlay" onClick={handleCloseForm}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <ProductForm
+                            initialProduct={editingProduct}
+                            onSave={handleSave}
+                            onCancel={handleCloseForm}
+                            saving={saving}
+                        />
+                    </div>
+                </div>
+            )}
+
+            {deleteConfirm.isOpen && (
+                <div className="modal-overlay" onClick={handleDeleteCancel}>
+                    <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="delete-modal-icon">
+                            <span>⚠️</span>
+                        </div>
+                        <h3 className="delete-modal-title">Delete Product</h3>
+                        <p className="delete-modal-message">
+                            Are you sure you want to delete <strong>"{deleteConfirm.product?.name}"</strong>?
+                        </p>
+                        <p className="delete-modal-warning">
+                            This action cannot be undone.
+                        </p>
+                        <div className="delete-modal-actions">
+                            <button
+                                onClick={handleDeleteCancel}
+                                className="inventory-btn inventory-btn--secondary"
+                                disabled={deleting}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleDeleteConfirm}
+                                className="inventory-btn inventory-btn--danger"
+                                disabled={deleting}
+                            >
+                                {deleting ? 'Deleting...' : 'Delete'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

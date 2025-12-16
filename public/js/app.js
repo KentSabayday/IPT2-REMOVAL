@@ -58127,18 +58127,28 @@ function ProductFilter(_ref) {
       onSearch();
     }
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+  var handleFilterClick = function handleFilterClick() {
+    if (onSearch) {
+      onSearch();
+    }
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
     className: "inventory-filter",
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
       type: "text",
-      className: "inventory-input",
+      className: "inventory-input inventory-search-input",
       placeholder: "Search products by name...",
       value: value,
       onChange: function onChange(event) {
         return _onChange(event.target.value);
       },
       onKeyDown: handleKeyDown
-    })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+      type: "button",
+      className: "inventory-btn inventory-btn--filter",
+      onClick: handleFilterClick,
+      children: "\uD83D\uDD0D Filter Product"
+    })]
   });
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProductFilter);
@@ -58391,6 +58401,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 var API_BASE_URL = '/api/product';
 function ProductInventoryApp() {
+  var _deleteConfirm$produc;
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState2 = _slicedToArray(_useState, 2),
     products = _useState2[0],
@@ -58422,6 +58433,17 @@ function ProductInventoryApp() {
     _useState14 = _slicedToArray(_useState13, 2),
     isFormOpen = _useState14[0],
     setIsFormOpen = _useState14[1];
+  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+      isOpen: false,
+      product: null
+    }),
+    _useState16 = _slicedToArray(_useState15, 2),
+    deleteConfirm = _useState16[0],
+    setDeleteConfirm = _useState16[1];
+  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState18 = _slicedToArray(_useState17, 2),
+    deleting = _useState18[0],
+    setDeleting = _useState18[1];
   var loadProducts = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
       var response, data, _t;
@@ -58552,39 +58574,60 @@ function ProductInventoryApp() {
       return _ref3.apply(this, arguments);
     };
   }();
-  var handleDelete = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(product) {
+  var handleDeleteClick = function handleDeleteClick(product) {
+    setDeleteConfirm({
+      isOpen: true,
+      product: product
+    });
+  };
+  var handleDeleteCancel = function handleDeleteCancel() {
+    setDeleteConfirm({
+      isOpen: false,
+      product: null
+    });
+  };
+  var handleDeleteConfirm = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
       var _t4;
       return _regenerator().w(function (_context4) {
         while (1) switch (_context4.p = _context4.n) {
           case 0:
-            if (confirm("Are you sure you want to delete \"".concat(product.name, "\"?\n\nThis action cannot be undone."))) {
+            if (deleteConfirm.product) {
               _context4.n = 1;
               break;
             }
             return _context4.a(2);
           case 1:
-            _context4.p = 1;
-            _context4.n = 2;
-            return fetch("".concat(API_BASE_URL, "/").concat(product.id), {
+            setDeleting(true);
+            _context4.p = 2;
+            _context4.n = 3;
+            return fetch("".concat(API_BASE_URL, "/").concat(deleteConfirm.product.id), {
               method: 'DELETE'
             });
-          case 2:
-            _context4.n = 3;
-            return loadProducts();
           case 3:
-            _context4.n = 5;
-            break;
+            _context4.n = 4;
+            return loadProducts();
           case 4:
-            _context4.p = 4;
+            setDeleteConfirm({
+              isOpen: false,
+              product: null
+            });
+            _context4.n = 6;
+            break;
+          case 5:
+            _context4.p = 5;
             _t4 = _context4.v;
             setError('Failed to delete product. Please try again.');
-          case 5:
+          case 6:
+            _context4.p = 6;
+            setDeleting(false);
+            return _context4.f(6);
+          case 7:
             return _context4.a(2);
         }
-      }, _callee4, null, [[1, 4]]);
+      }, _callee4, null, [[2, 5, 6, 7]]);
     }));
-    return function handleDelete(_x3) {
+    return function handleDeleteConfirm() {
       return _ref4.apply(this, arguments);
     };
   }();
@@ -58637,9 +58680,9 @@ function ProductInventoryApp() {
   }, [products, filterText, stockFilter]);
   var formatCurrency = function formatCurrency(value) {
     var number = typeof value === 'number' ? value : value != null ? Number(value) : 0;
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-PH', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'PHP',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(number);
@@ -58776,11 +58819,11 @@ function ProductInventoryApp() {
       children: [loading && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
         className: "inventory-loading",
         children: "Loading..."
-      }), !loading && !isFormOpen && hasProducts && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_ProductList__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      }), !loading && hasProducts && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_ProductList__WEBPACK_IMPORTED_MODULE_1__["default"], {
         products: filteredProducts,
         onEdit: handleEditClick,
-        onDelete: handleDelete
-      }), !loading && !isFormOpen && !hasProducts && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+        onDelete: handleDeleteClick
+      }), !loading && !hasProducts && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
         className: "inventory-empty",
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
           children: "No products found"
@@ -58789,12 +58832,61 @@ function ProductInventoryApp() {
           className: "inventory-btn inventory-btn--primary",
           children: "Add your first product"
         })]
-      }), isFormOpen && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_ProductForm__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        initialProduct: editingProduct,
-        onSave: handleSave,
-        onCancel: handleCloseForm,
-        saving: saving
       })]
+    }), isFormOpen && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+      className: "modal-overlay",
+      onClick: handleCloseForm,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+        className: "modal-content",
+        onClick: function onClick(e) {
+          return e.stopPropagation();
+        },
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_ProductForm__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          initialProduct: editingProduct,
+          onSave: handleSave,
+          onCancel: handleCloseForm,
+          saving: saving
+        })
+      })
+    }), deleteConfirm.isOpen && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+      className: "modal-overlay",
+      onClick: handleDeleteCancel,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+        className: "delete-modal",
+        onClick: function onClick(e) {
+          return e.stopPropagation();
+        },
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+          className: "delete-modal-icon",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+            children: "\u26A0\uFE0F"
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("h3", {
+          className: "delete-modal-title",
+          children: "Delete Product"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("p", {
+          className: "delete-modal-message",
+          children: ["Are you sure you want to delete ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("strong", {
+            children: ["\"", (_deleteConfirm$produc = deleteConfirm.product) === null || _deleteConfirm$produc === void 0 ? void 0 : _deleteConfirm$produc.name, "\""]
+          }), "?"]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
+          className: "delete-modal-warning",
+          children: "This action cannot be undone."
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+          className: "delete-modal-actions",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+            onClick: handleDeleteCancel,
+            className: "inventory-btn inventory-btn--secondary",
+            disabled: deleting,
+            children: "Cancel"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+            onClick: handleDeleteConfirm,
+            className: "inventory-btn inventory-btn--danger",
+            disabled: deleting,
+            children: deleting ? 'Deleting...' : 'Delete'
+          })]
+        })]
+      })
     })]
   });
 }
@@ -58819,9 +58911,9 @@ __webpack_require__.r(__webpack_exports__);
 
 var formatCurrency = function formatCurrency(value) {
   var number = typeof value === 'number' ? value : value != null ? Number(value) : 0;
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('en-PH', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'PHP',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }).format(number);
